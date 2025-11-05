@@ -40,6 +40,13 @@ function Header() {
           >
             Contact
           </Link>
+          <Link
+            as={NavLink}
+            to="/pricing"
+            _hover={{ textDecoration: "none", color: "brand.500" }}
+          >
+            Subscribe
+          </Link>
         </Flex>
 
         <Flex align="center" gap={2}>

@@ -1,25 +1,49 @@
-import { Button } from "@chakra-ui/react";
+import { fn } from "storybook/test";
+
+import { Button } from "./Button";
 
 export default {
-  title: "Button",
+  title: "Example/Button",
   component: Button,
+  parameters: {
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  argTypes: {
+    backgroundColor: { control: "color" },
+  },
+  args: { onClick: fn() },
 };
 
 export const Primary = {
   args: {
-    label: "Click me for test",
-    onclick: () => console.log("Primary button clicked"),
+    primary: true,
+    label: "Button",
   },
 };
 
 export const Secondary = {
-  ags: {
-    label: "Click me for test",
-    variant: "secondary",
-    size: "medium",
-    onclick: () => {
-      console.log("Secondary button clicked");
-    },
+  args: {
+    label: "Button",
   },
 };
 
+export const Large = {
+  args: {
+    size: "large",
+    label: "Button",
+  },
+};
+
+export const Small = {
+  args: {
+    size: "small",
+    label: "Button",
+  },
+};
+
+export const AddToCart = {
+  args: {
+    label: "Add to cart",
+  },
+};

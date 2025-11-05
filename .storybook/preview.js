@@ -1,1 +1,2 @@
-export { decorators } from "./preview.jsx";
+import preview from "./preview.jsx";
+export default preview;

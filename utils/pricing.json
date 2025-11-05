@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "name": "Free",
+      "price": "$29",
+      "seat":"Per month/seat",
+      "features": ["Basic features", "1 project", "No support"]
+    },
+    {
+      "id": 2,
+      "name": "Premium",
+      "price": "$49",
+      "seat":"Per month/seat",
+      "features": ["Everything in Free", "Unlimited projects", "Email support"]
+    },
+    {
+      "id": 3,
+      "name": "Enterprise",
+      "price": "Let's Talk",
+      "features": ["Everything in Pro", "Team collaboration", "Priority support"]
+    }
+  ]
+  
