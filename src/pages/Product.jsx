@@ -11,9 +11,12 @@ import {
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
 import { useNavigate } from "react-router-dom";
+import { toaster } from "../lib/toaster";
 
 const Product = ({ onClick }) => {
   const [products, setProducts] = useState([]);
+  const [cartData, setCartData] = useState([]);
+  console.log("cartData", cartData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
@@ -34,6 +37,41 @@ const Product = ({ onClick }) => {
     };
     fetchProduct();
   }, []);
+
+  const handleAddToCart = (item) => {
+    try {
+      const raw = localStorage.getItem("cart");
+      const existing = raw ? JSON.parse(raw) : [];
+
+      const index = existing.findIndex((p) => p.id === item.id);
+      if (index >= 0) {
+        existing[index].quantity = (existing[index].quantity || 1) + 1;
+      } else {
+        existing.push({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          image: item.image,
+          quantity: 1,
+        });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(existing));
+      setCartData(existing);
+
+      toaster.create({
+        title: "Item added to cart",
+        description: `${item.title} added to cart`,
+        type: "success",
+      });
+    } catch (error) {
+      toaster.create({
+        title: "Error adding item to cart",
+        description: error.message,
+        type: "error",
+      });
+    }
+  };
 
   // Pagination logic
   const startIndex = (page - 1) * itemsPerPage;
@@ -74,10 +112,6 @@ const Product = ({ onClick }) => {
             overflow="hidden"
             p={4}
             boxShadow="md"
-            onClick={() => {
-              if (onClick) onClick(item);
-              handleProductDetail(item.id);
-            }}
           >
             <Flex justify="center" mb={4}>
               <Image
@@ -85,6 +119,10 @@ const Product = ({ onClick }) => {
                 alt={item.title}
                 boxSize="150px"
                 objectFit="contain"
+                onClick={() => {
+                  if (onClick) onClick(item);
+                  handleProductDetail(item.id);
+                }}
               />
             </Flex>
 
@@ -107,6 +145,7 @@ const Product = ({ onClick }) => {
                 color="white"
                 _hover={{ bg: "blue.600" }}
                 mt={2}
+                onClick={() => handleAddToCart(item)}
               >
                 Add to Cart
               </Button>
