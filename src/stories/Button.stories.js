@@ -47,3 +47,9 @@ export const AddToCart = {
     label: "Add to cart",
   },
 };
+
+export const PlaceOrder = {
+  args: {
+    label: "Place Order",
+  },
+};

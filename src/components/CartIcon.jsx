@@ -1,28 +1,39 @@
-import { Box, Text, IconButton } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, Text } from "@chakra-ui/react";
+import React, { useEffect, useMemo, useState } from "react";
 import { LuShoppingCart } from "react-icons/lu";
 
 const CartIcon = () => {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    const raw = localStorage.getItem("cart");
-    const items = raw ? JSON.parse(raw) : [];
-    setCartItems(items);
-
-    const handleStorageChange = () => {
+    const syncCart = () => {
       const updated = JSON.parse(localStorage.getItem("cart")) || [];
       setCartItems(updated);
+      console.log("cartItems in CartIcon", updated);
     };
-    window.addEventListener("storage", handleStorageChange);
 
-    return () => window.removeEventListener("storage", handleStorageChange);
+    // initial sync
+    syncCart();
+
+    // sync on cross-tab storage changes and in-app updates
+    window.addEventListener("storage", syncCart);
+    window.addEventListener("cart-update", syncCart);
+
+    return () => {
+      window.removeEventListener("storage", syncCart);
+      window.removeEventListener("cart-update", syncCart);
+    };
   }, []);
+
+  const cartItemsCount = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cartItems]);
+  console.log("cartItemsCount in CartIcon", cartItemsCount);
 
   return (
     <Box position="relative">
       <LuShoppingCart size={20} />
-      {cartItems.length > 0 && (
+      {cartItemsCount > 0 && (
         <Text
           position="absolute"
           top="0"
@@ -39,7 +50,7 @@ const CartIcon = () => {
           minW="18px"
           textAlign="center"
         >
-          {cartItems.length}
+          {cartItemsCount}
         </Text>
       )}
     </Box>

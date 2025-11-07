@@ -1,4 +1,4 @@
-import { Box, Flex, Button, Link, Avatar } from "@chakra-ui/react";
+import { Box, Flex, Button, Link } from "@chakra-ui/react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { ColorModeButton } from "./ColorModeButton";
 import { LuMenu } from "react-icons/lu";
@@ -22,6 +22,9 @@ function Header() {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleProfileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -76,11 +79,18 @@ function Header() {
             >
               Products
             </Link>
+            <Link
+              as={NavLink}
+              to="/charts"
+              _hover={{ textDecoration: "none", color: "brand.500" }}
+            >
+              Charts
+            </Link>
           </Flex>
 
           <Flex align="center" gap={2}>
             {isSignedIn ? (
-              <Box onClick={toggleMenu} cursor="pointer">
+              <Box onClick={toggleProfileMenu} cursor="pointer">
                 <LuUser />
               </Box>
             ) : (
@@ -200,7 +210,10 @@ function Header() {
           <Link as={NavLink} to="/profile" onClick={() => setIsMenuOpen(false)}>
             <Button variant="outline">My Profile</Button>
           </Link>
-          <Link as={NavLink} to="/profile" onClick={() => setIsMenuOpen(false)}>
+          <Link as={NavLink} to="/orders" onClick={() => setIsMenuOpen(false)}>
+            <Button variant="outline">My Orders</Button>
+          </Link>
+          <Link as={NavLink} to="/signout" onClick={() => setIsMenuOpen(false)}>
             <Button variant="outline" onClick={handleSignOut}>
               Sign Out
             </Button>

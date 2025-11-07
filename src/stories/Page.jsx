@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "../components/Header.jsx";
+import Header from "./Header.stories";
 import "./page.css";
 import Product from "../pages/Product.jsx";
 import { fn } from "storybook/test";
@@ -7,6 +7,7 @@ import ProductDetail from "../pages/ProductDetail.jsx";
 import PricingPage from "../pages/PricingPage.jsx";
 import pricing from "../../utils/pricing.json";
 import yearlypricing from "../../utils/yearlypricing.json";
+import Charts from "../pages/Charts.jsx";
 
 export const Page = () => {
   const [user, setUser] = React.useState();
@@ -43,6 +44,7 @@ export const Page = () => {
         yearlypricingData={yearlypricing}
         onTabChange={handleTabChange}
       />
+      <Charts />
 
       <section className="storybook-page">
         <h2>Pages in Storybook</h2>

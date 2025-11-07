@@ -17,6 +17,8 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Charts from "./pages/Charts";
+import Orders from "./pages/Orders";
 
 const App = () => {
   return (
@@ -38,6 +40,8 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/charts" element={<Charts />} />
+          <Route path="/orders" element={<Orders />} />
         </Routes>
       </Box>
       <Footer />

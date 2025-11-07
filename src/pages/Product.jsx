@@ -58,6 +58,7 @@ const Product = ({ onClick }) => {
 
       localStorage.setItem("cart", JSON.stringify(existing));
       setCartData(existing);
+      window.dispatchEvent(new Event("cart-update"));
 
       toaster.create({
         title: "Item added to cart",

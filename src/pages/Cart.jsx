@@ -9,10 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { toaster } from "../lib/toaster";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     try {
       const raw = localStorage.getItem("cart");
@@ -37,6 +38,7 @@ const Cart = () => {
   const handleClear = () => {
     localStorage.removeItem("cart");
     setCartData([]);
+    window.dispatchEvent(new Event("cart-update"));
   };
 
   const handleQuantityChange = (id, quantity) => {
@@ -48,11 +50,18 @@ const Cart = () => {
     }
     localStorage.setItem("cart", JSON.stringify(items));
     setCartData(items);
+    window.dispatchEvent(new Event("cart-update"));
   };
 
   return (
     <Box maxW="7xl" mx="auto" py={10} px={[4, 6, 8]}>
-      <Heading mb={6}>Your Cart</Heading>
+      <Flex justify="space-between" align="center">
+        <Heading mb={6}>Your Cart</Heading>
+        <Button variant="outline" onClick={handleClear}>
+          Clear Cart
+        </Button>
+      </Flex>
+
       {cartData.length === 0 ? (
         <Text>Your cart is empty.</Text>
       ) : (
@@ -73,8 +82,13 @@ const Cart = () => {
                 objectFit="contain"
               />
               <Box flex="1">
-                <Text fontWeight="semibold">{item.title}</Text>
-                <Flex align="center" gap={4}>
+                <Text
+                  fontWeight={["normal", "semibold"]}
+                  fontSize={["sm", "md"]}
+                >
+                  {item.title}
+                </Text>
+                <Flex align="center" gap={4} my={["4", "2"]}>
                   <Text color="gray.600">
                     ${item.price.toFixed(2)} × {item.quantity || 1}
                   </Text>
@@ -88,7 +102,7 @@ const Cart = () => {
                     >
                       -
                     </Button>
-                    <Text>{item.quantity || 1}</Text>
+                    <Text>{item.quantity || 0}</Text>
                     <Button
                       variant="outline"
                       size="sm"
@@ -101,7 +115,11 @@ const Cart = () => {
                   </Flex>
                 </Flex>
               </Box>
-              <Text fontWeight="bold">
+              <Text
+                fontWeight={["normal", "bold"]}
+                fontSize={["sm", "md"]}
+                display={["none", "block"]}
+              >
                 ${(item.price * (item.quantity || 1)).toFixed(2)}
               </Text>
             </Flex>
@@ -110,8 +128,8 @@ const Cart = () => {
             <Text fontSize="lg" fontWeight="bold">
               Total: ${total.toFixed(2)}
             </Text>
-            <Button variant="outline" onClick={handleClear}>
-              Clear Cart
+            <Button variant="outline" onClick={() => navigate("/checkout")}>
+              Checkout
             </Button>
           </Flex>
         </Stack>

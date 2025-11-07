@@ -1,4 +1,11 @@
-import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Separator,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import pricing from "../../utils/pricing.json";
 
@@ -43,7 +50,8 @@ const Mothly = () => {
           Get Started
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {
@@ -91,7 +99,8 @@ const Mothly = () => {
           Get Started
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {
@@ -132,7 +141,8 @@ const Mothly = () => {
           Contact sales
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {

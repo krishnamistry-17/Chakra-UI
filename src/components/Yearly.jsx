@@ -1,4 +1,4 @@
-import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Separator, SimpleGrid, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import yearlypricing from "../../utils/yearlypricing.json";
 
@@ -43,7 +43,8 @@ const Yearly = () => {
           Get Started
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {
@@ -91,7 +92,8 @@ const Yearly = () => {
           Get Started
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {
@@ -132,7 +134,8 @@ const Yearly = () => {
           Contact sales
         </Button>
         <Box my={3}>
-          <hr style={{ border: "1px solid #e0e0e0" }} />
+          {/* <hr style={{ border: "1px solid #e0e0e0" }} /> */}
+          <Separator />
         </Box>
         <Box mt={4}>
           {pricingData?.map((item, index) => {
