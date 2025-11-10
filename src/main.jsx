@@ -9,6 +9,20 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import AuthSync from "./components/AuthSync.jsx";
 import { toaster } from "./lib/toaster.js";
+import ReactDOM from "react-dom";
+
+//portal
+function Modal({ children }) {
+  return ReactDOM.createPortal(
+    <div className="modal">{children}</div>,
+    document.getElementById("modal-root")
+  );
+}
+console.log(
+  <Modal>
+    <div>Hello from modal</div>
+  </Modal>
+);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

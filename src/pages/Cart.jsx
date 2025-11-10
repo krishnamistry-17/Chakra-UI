@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -10,9 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "../lib/toaster";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   useEffect(() => {
     try {
@@ -25,6 +28,8 @@ const Cart = () => {
         description: error.message,
         type: "error",
       });
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -35,13 +40,13 @@ const Cart = () => {
     );
   }, [cartData]);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     localStorage.removeItem("cart");
     setCartData([]);
     window.dispatchEvent(new Event("cart-update"));
-  };
+  }, []);
 
-  const handleQuantityChange = (id, quantity) => {
+  const handleQuantityChange = useCallback((id, quantity) => {
     const raw = localStorage.getItem("cart");
     const items = raw ? JSON.parse(raw) : [];
     const index = items.findIndex((item) => item.id === id);
@@ -51,7 +56,11 @@ const Cart = () => {
     localStorage.setItem("cart", JSON.stringify(items));
     setCartData(items);
     window.dispatchEvent(new Event("cart-update"));
-  };
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Box maxW="7xl" mx="auto" py={10} px={[4, 6, 8]}>

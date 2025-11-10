@@ -8,7 +8,9 @@ import PricingPage from "../pages/PricingPage.jsx";
 import pricing from "../../utils/pricing.json";
 import yearlypricing from "../../utils/yearlypricing.json";
 import Charts from "../pages/Charts.jsx";
+import MouseTracker from "../components/ComponentTracker.jsx";
 
+//supabse and signin-signup not working
 export const Page = () => {
   const [user, setUser] = React.useState();
   const handleProductClick = () => {
@@ -45,6 +47,13 @@ export const Page = () => {
         onTabChange={handleTabChange}
       />
       <Charts />
+      <MouseTracker
+        render={(x, y) => (
+          <p>
+            Mouse Position: X: {x}, Y: {y}
+          </p>
+        )}
+      />
 
       <section className="storybook-page">
         <h2>Pages in Storybook</h2>

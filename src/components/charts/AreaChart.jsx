@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Heading } from "@chakra-ui/react";
 import { Chart, useChart } from "@chakra-ui/charts";
 import {
@@ -26,6 +26,10 @@ const AreaCharts = () => {
     data,
     series: [{ name: "sales", color: "blue.500" }],
   });
+  const currencyFormater = useMemo(
+    () => chart.formatNumber({ style: "currency", currency: "USD" }),
+    [chart]
+  );
 
   return (
     <Box
@@ -71,13 +75,7 @@ const AreaCharts = () => {
               strokeDasharray="3 3"
               stroke={chart.color("border.muted")}
             />
-            <Tooltip
-              formatter={(value) =>
-                chart.formatNumber({ style: "currency", currency: "USD" })(
-                  value
-                )
-              }
-            />
+            <Tooltip formatter={(value) => currencyFormater(value)} />
             <Area
               type="monotone"
               dataKey={chart.key("sales")}

@@ -8,10 +8,13 @@ import {
   Spinner,
   Stack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Pagination from "../components/Pagination";
 import { useNavigate } from "react-router-dom";
 import { toaster } from "../lib/toaster";
+import * as ReactWindow from "react-window";
+import Loader from "../components/Loader";
+const List = ReactWindow.FixedSizeList;
 
 const Product = ({ onClick }) => {
   const [products, setProducts] = useState([]);
@@ -23,22 +26,24 @@ const Product = ({ onClick }) => {
   const navigate = useNavigate();
   const itemsPerPage = 6;
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await fetch("https://fakestoreapi.com/products");
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        setError("Failed to load products.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, []);
+  const handleProductDetail = useCallback(
+    (id) => {
+      navigate(`/product/${id}`);
+    },
+    [navigate]
+  );
 
-  const handleAddToCart = (item) => {
+  const onImageClick = useCallback(
+    (item) => {
+      if (onClick) onClick(item);
+      handleProductDetail(item.id);
+    },
+    [onClick, handleProductDetail]
+  );
+
+  const shouldVirtualize = products.length > 50;
+  const ROW_HEIGHT = 220;
+  const handleAddToCart = useCallback((item) => {
     try {
       const raw = localStorage.getItem("cart");
       const existing = raw ? JSON.parse(raw) : [];
@@ -72,18 +77,38 @@ const Product = ({ onClick }) => {
         type: "error",
       });
     }
-  };
+  }, []);
+
+  const itemData = useMemo(
+    () => ({
+      items: products,
+      handleAddToCart,
+      onImageClick,
+    }),
+    [products, handleAddToCart, onImageClick]
+  );
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError("Failed to load products.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, []);
 
   // Pagination logic
   const startIndex = (page - 1) * itemsPerPage;
   const currentItems = products.slice(startIndex, startIndex + itemsPerPage);
 
   if (loading) {
-    return (
-      <Flex align="center" justify="center" h="70vh">
-        <Spinner size="xl" />
-      </Flex>
-    );
+    return <Loader />;
   }
 
   if (error) {
@@ -94,8 +119,48 @@ const Product = ({ onClick }) => {
     );
   }
 
-  const handleProductDetail = (id) => {
-    navigate(`/product/${id}`);
+  const ProductRow = ({ index, style, data }) => {
+    const item = data.items[index];
+    if (!item) return null;
+    return (
+      <Box style={style} px={2}>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          p={4}
+          boxShadow="md"
+        >
+          <Flex justify="center" mb={4}>
+            <Image
+              src={item.image}
+              alt={item.title}
+              boxSize="150px"
+              objectFit="contain"
+              onClick={() => data.onImageClick(item)}
+              style={{ cursor: "pointer" }}
+            />
+          </Flex>
+          <Stack spacing={2}>
+            <Text fontSize="md" fontWeight="semibold" noOfLines={2} minH="48px">
+              {item.title}
+            </Text>
+            <Text color="gray.500" fontWeight="medium">
+              ${item.price.toFixed(2)}
+            </Text>
+            <Button
+              bg="blue.500"
+              color="white"
+              _hover={{ bg: "blue.600" }}
+              mt={2}
+              onClick={() => data.handleAddToCart(item)}
+            >
+              Add to Cart
+            </Button>
+          </Stack>
+        </Box>
+      </Box>
+    );
   };
 
   return (
@@ -104,66 +169,80 @@ const Product = ({ onClick }) => {
         Products
       </Text>
 
-      <SimpleGrid columns={[1, 2, 3]} spacing={6} gap={4}>
-        {currentItems.map((item) => (
-          <Box
-            key={item.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            p={4}
-            boxShadow="md"
-          >
-            <Flex justify="center" mb={4}>
-              <Image
-                src={item.image}
-                alt={item.title}
-                boxSize="150px"
-                objectFit="contain"
-                onClick={() => {
-                  if (onClick) onClick(item);
-                  handleProductDetail(item.id);
-                }}
-              />
-            </Flex>
+      {shouldVirtualize ? (
+        <List
+          height={600}
+          itemCount={products.length}
+          itemSize={ROW_HEIGHT}
+          width={"100%"}
+          itemData={itemData}
+        >
+          {ProductRow}
+        </List>
+      ) : (
+        <SimpleGrid columns={[1, 2, 3]} spacing={6} gap={4}>
+          {currentItems.map((item) => (
+            <Box
+              key={item.id}
+              borderWidth="1px"
+              borderRadius="lg"
+              overflow="hidden"
+              p={4}
+              boxShadow="md"
+            >
+              <Flex justify="center" mb={4}>
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  boxSize="150px"
+                  objectFit="contain"
+                  onClick={() => {
+                    if (onClick) onClick(item);
+                    handleProductDetail(item.id);
+                  }}
+                />
+              </Flex>
 
-            <Stack spacing={2}>
-              <Text
-                fontSize="md"
-                fontWeight="semibold"
-                noOfLines={2}
-                minH="48px"
-              >
-                {item.title}
-              </Text>
+              <Stack spacing={2}>
+                <Text
+                  fontSize="md"
+                  fontWeight="semibold"
+                  noOfLines={2}
+                  minH="48px"
+                >
+                  {item.title}
+                </Text>
 
-              <Text color="gray.500" fontWeight="medium">
-                ${item.price.toFixed(2)}
-              </Text>
+                <Text color="gray.500" fontWeight="medium">
+                  ${item.price.toFixed(2)}
+                </Text>
 
-              <Button
-                bg="blue.500"
-                color="white"
-                _hover={{ bg: "blue.600" }}
-                mt={2}
-                onClick={() => handleAddToCart(item)}
-              >
-                Add to Cart
-              </Button>
-            </Stack>
-          </Box>
-        ))}
-      </SimpleGrid>
+                <Button
+                  bg="blue.500"
+                  color="white"
+                  _hover={{ bg: "blue.600" }}
+                  mt={2}
+                  onClick={() => handleAddToCart(item)}
+                >
+                  Add to Cart
+                </Button>
+              </Stack>
+            </Box>
+          ))}
+        </SimpleGrid>
+      )}
 
       {/* Pagination Section */}
-      <Flex justify="center" mt={10}>
-        <Pagination
-          totalItems={products.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={page}
-          onPageChange={setPage}
-        />
-      </Flex>
+      {!shouldVirtualize && (
+        <Flex justify="center" mt={10}>
+          <Pagination
+            totalItems={products.length}
+            itemsPerPage={itemsPerPage}
+            currentPage={page}
+            onPageChange={setPage}
+          />
+        </Flex>
+      )}
     </Box>
   );
 };

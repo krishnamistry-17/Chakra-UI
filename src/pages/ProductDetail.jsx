@@ -1,14 +1,14 @@
 import { AspectRatio, Box, Image } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ProductDetail = ({ onViewProduct }) => {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
 
-  const handleViewProduct = () => {
+  const handleViewProduct = useCallback(() => {
     if (onViewProduct) onViewProduct(id);
-  };
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {

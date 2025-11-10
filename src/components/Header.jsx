@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ColorModeButton } from "./ColorModeButton";
 import { LuMenu } from "react-icons/lu";
 import { LuUser } from "react-icons/lu";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsSignedIn } from "../store/authSlice";
 import { clearSession } from "../store/authSlice";
@@ -15,22 +15,22 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     dispatch(clearSession());
     navigate("/");
-  };
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleProfileMenu = () => {
+  const toggleProfileMenu = useCallback(() => {
     setIsMenuOpen(!isMenuOpen);
-  };
+  }, []);
 
-  const handleCart = () => {
+  const handleCart = useCallback(() => {
     navigate("/cart");
-  };
+  }, []);
 
   const isSignedIn = useSelector(selectIsSignedIn);
   console.log("isSignedIn in header??????", isSignedIn);

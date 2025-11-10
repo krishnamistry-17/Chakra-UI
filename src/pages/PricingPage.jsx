@@ -1,15 +1,15 @@
 import { Box, Heading, Tabs } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { LuUser } from "react-icons/lu";
 import Yearly from "../components/Yearly";
 import Monthly from "../components/Monthly";
 
 const PricingPage = ({ pricingData, yearlypricingData, onTabChange }) => {
   const [activeTab, setActiveTab] = useState("monthly");
-  const handleTabChange = (value) => {
+  const handleTabChange = useCallback((value) => {
     setActiveTab(value);
     if (onTabChange) onTabChange(value);
-  };
+  }, []);
 
   return (
     <Box p={5}>

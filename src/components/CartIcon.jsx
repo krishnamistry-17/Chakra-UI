@@ -25,9 +25,11 @@ const CartIcon = () => {
     };
   }, []);
 
-  const cartItemsCount = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cartItems]);
+  const cartItemsCount = useMemo(
+    () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
+    [cartItems]
+  );
+
   console.log("cartItemsCount in CartIcon", cartItemsCount);
 
   return (
@@ -57,4 +59,4 @@ const CartIcon = () => {
   );
 };
 
-export default CartIcon;
+export default React.memo(CartIcon);
