@@ -3,6 +3,7 @@
 import { Box } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import Product from "./Product";
 // import Counter from "../components/Counter";
 // import MouseTracker from "../components/ComponentTracker";
 // import { Tabs, Tab } from "../components/Compoundcomponent";
@@ -42,7 +43,7 @@ const Home = () => {
         <UserWithLogger name="Test" />
       </Box> */}
       {/* <ProfilerComponent /> */}
-      Home
+      <Product />
       {/* <Counter /> using zustand */}
     </Box>
   );

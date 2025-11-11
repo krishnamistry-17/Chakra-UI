@@ -72,13 +72,13 @@ function Header() {
             >
               Subscribe
             </Link>
-            <Link
+            {/* <Link
               as={NavLink}
               to="/product"
               _hover={{ textDecoration: "none", color: "brand.500" }}
             >
               Products
-            </Link>
+            </Link> */}
             <Link
               as={NavLink}
               to="/charts"
