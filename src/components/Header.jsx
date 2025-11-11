@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectIsSignedIn } from "../store/authSlice";
 import { clearSession } from "../store/authSlice";
 import CartIcon from "./CartIcon";
+import { supabase } from "../lib/supabaseClient";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +16,16 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSignOut = useCallback(() => {
-    dispatch(clearSession());
-    navigate("/");
-  }, []);
+  const handleSignOut = useCallback(async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // no-op; AuthSync will still clear session if signOut partially fails
+    } finally {
+      dispatch(clearSession());
+      navigate("/");
+    }
+  }, [dispatch, navigate]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -213,7 +220,7 @@ function Header() {
           <Link as={NavLink} to="/orders" onClick={() => setIsMenuOpen(false)}>
             <Button variant="outline">My Orders</Button>
           </Link>
-          <Link as={NavLink} to="/signout" onClick={() => setIsMenuOpen(false)}>
+          <Link as={NavLink} onClick={() => setIsMenuOpen(false)}>
             <Button variant="outline" onClick={handleSignOut}>
               Sign Out
             </Button>
